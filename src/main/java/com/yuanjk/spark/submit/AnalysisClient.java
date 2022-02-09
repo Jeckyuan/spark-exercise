@@ -27,12 +27,14 @@ public class AnalysisClient {
 
 
     public static void main(String[] args) {
-//        AnalysisClient client = new AnalysisClient("127.0.0.1", 9998);
-        AnalysisClient client = new AnalysisClient("10.0.168.52", 9909);
+//        AnalysisClient client = new AnalysisClient("127.0.0.1", 9909);
+//        AnalysisClient client = new AnalysisClient("10.0.168.52", 9909);
+        AnalysisClient client = new AnalysisClient("10.2.112.68", 9909);
 
         client.openSession();
 
-        client.sendAnalyseRequest("MY TEST STRING", 10000);
+//        client.sendAnalyseRequest("MY TEST STRING", 10000);
+        client.sendAnalyseRequest("TRAFFIC_CAMERAS", 10000);
 
     }
 

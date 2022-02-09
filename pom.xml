@@ -6,7 +6,7 @@
 
     <groupId>com.yuanjk</groupId>
     <artifactId>spark-exercise</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -16,7 +16,7 @@
         <!--        <akka.version>2.6.14</akka.version>-->
         <akka.version>2.5.32</akka.version>
         <sacal.version>2.11</sacal.version>
-
+        <ignite.version>2.11.1</ignite.version>
     </properties>
 
     <dependencies>
@@ -54,30 +54,51 @@
             <artifactId>sedona-viz-2.4_${sacal.version}</artifactId>
             <version>1.1.1-incubating</version>
         </dependency>
-        <dependency>
-            <groupId>org.datasyslab</groupId>
-            <artifactId>geotools-wrapper</artifactId>
-            <version>1.1.0-25.2</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.locationtech.jts/jts-core -->
         <dependency>
             <groupId>org.locationtech.jts</groupId>
             <artifactId>jts-core</artifactId>
             <version>1.18.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.wololo/jts2geojson -->
+        <dependency>
+            <groupId>org.wololo</groupId>
+            <artifactId>jts2geojson</artifactId>
+            <version>0.16.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.locationtech.jts</groupId>
+                    <artifactId>jts-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.datasyslab/geotools-wrapper -->
+        <dependency>
+            <groupId>org.datasyslab</groupId>
+            <artifactId>geotools-wrapper</artifactId>
+            <version>1.1.0-25.2</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.typesafe.akka/akka-actor -->
         <dependency>
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-actor_${sacal.version}</artifactId>
             <version>${akka.version}</version>
-            <!--            <scope>provided</scope>-->
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.typesafe.akka/akka-cluster -->
         <dependency>
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-cluster_${sacal.version}</artifactId>
             <version>${akka.version}</version>
-            <!--            <scope>provided</scope>-->
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.ignite/ignite-clients -->
+        <dependency>
+            <groupId>org.apache.ignite</groupId>
+            <artifactId>ignite-clients</artifactId>
+            <version>${ignite.version}</version>
         </dependency>
     </dependencies>
 
@@ -105,6 +126,11 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <args>
+                        <arg>-nobootcp</arg>
+                    </args>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

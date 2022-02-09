@@ -17,7 +17,7 @@ public class AnalysisServer {
 
 
     public static void main(String[] args) {
-        AnalysisServer server = new AnalysisServer("127.0.0.1", 8084);
+        AnalysisServer server = new AnalysisServer("127.0.0.1", 8808);
         server.openSession();
     }
 

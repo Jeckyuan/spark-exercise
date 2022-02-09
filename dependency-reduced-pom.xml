@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.yuanjk</groupId>
   <artifactId>spark-exercise</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.1-SNAPSHOT</version>
   <build>
     <plugins>
       <plugin>
@@ -27,6 +27,11 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <args>
+            <arg>-nobootcp</arg>
+          </args>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
@@ -84,6 +89,7 @@
   </dependencies>
   <properties>
     <akka.version>2.5.32</akka.version>
+    <ignite.version>2.11.1</ignite.version>
     <sacal.version>2.11</sacal.version>
     <hadoop.version>2.7.3</hadoop.version>
     <maven.compiler.source>8</maven.compiler.source>
