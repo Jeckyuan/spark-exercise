@@ -1,17 +1,18 @@
 package com.yuanjk.spark.util;
 
+import org.apache.ignite.Ignite;
+import org.apache.ignite.IgniteCache;
 import org.apache.ignite.Ignition;
+import org.apache.ignite.cache.query.QueryCursor;
 import org.apache.ignite.cache.query.SqlFieldsQuery;
 import org.apache.ignite.client.ClientCache;
 import org.apache.ignite.client.IgniteClient;
 import org.apache.ignite.configuration.ClientConfiguration;
+import org.apache.ignite.configuration.IgniteConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author yuanjk
@@ -98,6 +99,83 @@ public class LoadDataToIgnite {
                 + propertiesValuePlaceHolderSb.toString();
 
         client.query(new SqlFieldsQuery(sqlFieldsQuerySQL).setArgs(propertiesValueArray).setSchema(schemaName))
+                .getAll();
+    }
+
+
+    public static void dataQuery(IgniteClient client, String schemaName, String tableName, long limit) {
+        String sqlFieldsQuerySQL = "SELECT * " + " FROM " + tableName;
+
+        if (limit > 0) {
+            sqlFieldsQuerySQL = sqlFieldsQuerySQL + " LIMIT  " + limit;
+        }
+        List<String> pids = new ArrayList<>(100 * 10000);
+        SqlFieldsQuery sql = new SqlFieldsQuery(sqlFieldsQuerySQL).setSchema(schemaName);
+        try (QueryCursor<List<?>> cursor = client.query(sql)) {
+            for (List<?> row : cursor) {
+                pids.add( row.get(0).toString());
+//                System.out.println("------------");
+//                row.forEach(System.out::println);
+//                System.out.println(row.get(5));;
+            }
+//                System.out.println("personName=" + row.get(0));
+        }
+        System.out.println("result size: " + pids.size());
+    }
+
+    public static void dataQueryServer(Ignite ignite, String schemaName, String tableName, long limit) {
+        String sqlFieldsQuerySQL = "SELECT * " + " FROM " + tableName;
+
+        if (limit > 0) {
+            sqlFieldsQuerySQL = sqlFieldsQuerySQL + " LIMIT  " + limit;
+        }
+        List<String> pids = new ArrayList<>(100 * 10000);
+        SqlFieldsQuery sql = new SqlFieldsQuery(sqlFieldsQuerySQL).setSchema(schemaName);
+        try (QueryCursor<List<?>> cursor = ignite.cache(tableName).query(sql)) {
+            for (List<?> row : cursor) {
+                pids.add(row.get(0).toString());
+//                System.out.println("------------");
+//                row.forEach(System.out::println);
+//                System.out.println(row.get(5));;
+            }
+//                System.out.println("personName=" + row.get(0));
+        }
+        System.out.println("result size: " + pids.size());
+    }
+
+    public static void dataLoaderServer(IgniteCache igniteCache, String schemaName, String tableName,
+                                        Map<String, Object> dataPropertiesValue) {
+        Set<String> dataPropertyNameSet = dataPropertiesValue.keySet();
+
+        String[] dataPropertiesNameArray = dataPropertyNameSet.stream().toArray(n -> new String[n]);
+        StringBuffer propertiesNameSb = new StringBuffer();
+        StringBuffer propertiesValuePlaceHolderSb = new StringBuffer();
+        propertiesNameSb.append("(");
+        propertiesValuePlaceHolderSb.append("(");
+
+        Object[] propertiesValueArray = new Object[dataPropertyNameSet.size()];
+
+        for (int i = 0; i < dataPropertiesNameArray.length; i++) {
+            String currentDataPropertyName = dataPropertiesNameArray[i];
+            // get dataType for property value validate
+            //String dataType = slicePropertiesMap.get(currentDataPropertyName.toUpperCase());
+            propertiesNameSb.append(currentDataPropertyName);
+            propertiesValuePlaceHolderSb.append("?");
+
+            if (i < dataPropertiesNameArray.length - 1) {
+                propertiesNameSb.append(",");
+                propertiesValuePlaceHolderSb.append(",");
+            }
+            propertiesValueArray[i] = dataPropertiesValue.get(currentDataPropertyName);
+        }
+        propertiesNameSb.append(")");
+        propertiesValuePlaceHolderSb.append(")");
+
+
+        String sqlFieldsQuerySQL = "INSERT INTO " + " " + tableName + " " + propertiesNameSb.toString() + " VALUES "
+                + propertiesValuePlaceHolderSb.toString();
+
+        igniteCache.query(new SqlFieldsQuery(sqlFieldsQuerySQL).setArgs(propertiesValueArray).setSchema(schemaName))
                 .getAll();
     }
 

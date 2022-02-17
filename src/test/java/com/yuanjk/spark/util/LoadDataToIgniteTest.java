@@ -1,7 +1,9 @@
 package com.yuanjk.spark.util;
 
+import org.apache.ignite.Ignite;
 import org.apache.ignite.Ignition;
 import org.apache.ignite.client.IgniteClient;
+import org.apache.ignite.configuration.IgniteConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +63,7 @@ public class LoadDataToIgniteTest {
     @Test
     public void csvTableCreate() {
         String schemaName = "CIM_STUDY";
-        String tableName = "yellow_tripdata_2015_11_v2";
+        String tableName = "yellow_tripdata_2015_11_v3";
         Map<String, IgniteUtil.DataTypeEnum> columns = new HashMap<>();
         columns.put("pid", IgniteUtil.DataTypeEnum.BIGINT);
         columns.put("vendor_id", IgniteUtil.DataTypeEnum.TINYINT);
@@ -296,9 +298,42 @@ public class LoadDataToIgniteTest {
 
     @Test
     public void emptyTable() {
-        String tableName = "yellow_tripdata_2015_11";
+        String tableName = "yellow_tripdata_2015_11_v3";
 
         LoadDataToIgnite.emptyTable(tableName);
+    }
+
+    @Test
+    public void dataQuery() {
+        long startDate = System.currentTimeMillis();
+        String schemaName = "CIM_STUDY";
+        String tableName = "yellow_tripdata_2015_11";
+        try (IgniteClient client = Ignition.startClient(LoadDataToIgnite.igniteConfig)) {
+            System.out.println("===server start used ms: " + (System.currentTimeMillis() - startDate));
+            LoadDataToIgnite.dataQuery(client, schemaName, tableName, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("===total used million seconds===[" + (System.currentTimeMillis() - startDate) + "]");
+    }
+
+    @Test
+    public void dataQueryServer() {
+        long startDate = System.currentTimeMillis();
+        String schemaName = "CIM_STUDY";
+        String tableName = "yellow_tripdata_2015_11";
+
+        IgniteConfiguration configuration = IgniteUtil.getIgniteConfiguration(true);
+
+        try (Ignite ignite = Ignition.start(configuration)) {
+            System.out.println("===server start used ms: " + (System.currentTimeMillis() - startDate));
+            LoadDataToIgnite.dataQueryServer(ignite, schemaName, tableName, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("===total used million seconds===[" + (System.currentTimeMillis() - startDate) + "]");
     }
 
 

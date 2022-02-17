@@ -24,7 +24,7 @@ public class IgniteUtil {
 
         TcpDiscoverySpi discoverySpi = new TcpDiscoverySpi();
         discoverySpi.setLocalAddress("10.2.112.68");
-        discoverySpi.setLocalPort(45300);
+        discoverySpi.setLocalPort(43500);
         TcpDiscoveryVmIpFinder vmIpFinder = new TcpDiscoveryVmIpFinder();
 
         discoverySpi.setIpFinder(vmIpFinder);
