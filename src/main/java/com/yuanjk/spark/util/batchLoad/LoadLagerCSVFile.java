@@ -30,7 +30,8 @@ public class LoadLagerCSVFile {
         String filePath = "G:\\data\\geospatial_data\\taxi_data\\yellow_tripdata_2015-11.csv";
 
         String endFlag = "DONE";
-        LoadDataToIgnite.setIgniteConfig("10.0.168.45:10800", "10.0.168.19:10800", "10.0.168.52:10800");
+//        LoadDataToIgnite.setIgniteConfig("10.0.168.45:10800", "10.0.168.19:10800", "10.0.168.52:10800");
+        LoadDataToIgnite.setIgniteConfig("10.2.112.43:10800");
         ClientConfiguration igniteConfig = LoadDataToIgnite.igniteConfig;
 
         BlockingQueue<String> blockingDeque = new ArrayBlockingQueue<String>(100 * 10000);

@@ -24,19 +24,20 @@ public class IgniteUtil {
 
         TcpDiscoverySpi discoverySpi = new TcpDiscoverySpi();
         discoverySpi.setLocalAddress("10.2.112.68");
-        discoverySpi.setLocalPort(43500);
+        discoverySpi.setLocalPort(43600);
         TcpDiscoveryVmIpFinder vmIpFinder = new TcpDiscoveryVmIpFinder();
 
         discoverySpi.setIpFinder(vmIpFinder);
 //        String[] addressArr = {"10.0.168.52:43500", "10.0.168.19:43500", "10.0.168.45:43500"};
 
         String[] addressArr = {"10.2.112.43:43500"};
+//        String[] addressArr = {"10.2.112.68:43500"};
         vmIpFinder.setAddresses(Arrays.asList(addressArr));
 
         cfg.setDiscoverySpi(discoverySpi);
 
         TcpCommunicationSpi communicationSpi = new TcpCommunicationSpi();
-        communicationSpi.setLocalPort(43100);
+        communicationSpi.setLocalPort(43200);
         cfg.setCommunicationSpi(communicationSpi);
 
         return cfg;

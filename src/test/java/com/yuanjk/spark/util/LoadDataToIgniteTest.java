@@ -25,7 +25,8 @@ public class LoadDataToIgniteTest {
 
     @Before
     public void setUp() throws Exception {
-        LoadDataToIgnite.setIgniteConfig("10.0.168.45:10800");
+//        LoadDataToIgnite.setIgniteConfig("10.0.168.45:10800");
+        LoadDataToIgnite.setIgniteConfig("10.2.112.43:10800");
     }
 
     @After
@@ -307,7 +308,7 @@ public class LoadDataToIgniteTest {
     public void dataQuery() {
         long startDate = System.currentTimeMillis();
         String schemaName = "CIM_STUDY";
-        String tableName = "yellow_tripdata_2015_11";
+        String tableName = "yellow_tripdata_2015_11_v3";
         try (IgniteClient client = Ignition.startClient(LoadDataToIgnite.igniteConfig)) {
             System.out.println("===server start used ms: " + (System.currentTimeMillis() - startDate));
             LoadDataToIgnite.dataQuery(client, schemaName, tableName, 0);
